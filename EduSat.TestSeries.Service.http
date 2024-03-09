@@ -1,0 +1,6 @@
+@EduSat.TestSeries.Service_HostAddress = http://localhost:5201
+
+GET {{EduSat.TestSeries.Service_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
