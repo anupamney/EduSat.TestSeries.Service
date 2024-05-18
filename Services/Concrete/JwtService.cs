@@ -7,12 +7,12 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using EduSat.TestSeries.Service.Config;
 using EduSat.TestSeries.Service.Data;
-using EduSat.TestSeries.Service.Dtos.Auth;
-using EduSat.TestSeries.Service.Dtos.Auth.Request;
-using EduSat.TestSeries.Service.Dtos.Auth.Response;
 using EduSat.TestSeries.Service.Models;
+using EduSat.TestSeries.Service.Models.DTOs.Auth.Request;
+using EduSat.TestSeries.Service.Models.DTOs.Auth.Response;
+using EduSat.TestSeries.Service.Services.Interfaces;
 
-namespace EduSat.TestSeries.Service.Services;
+namespace EduSat.TestSeries.Service.Services.Concrete;
 
 public class JwtService : IJwtService
 {
@@ -26,12 +26,12 @@ public class JwtService : IJwtService
         _tokenValidationParameters = tokenValidationParameters;
     }
 
-    public async Task<AuthResult> GenerateToken(IdentityUser user)
+    public async Task<AuthResult> GenerateToken(IdentityUser user, string role)
     {
 
         JwtSecurityTokenHandler? jwtTokenHandler = new JwtSecurityTokenHandler();
 
-        Byte[] key = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
+        byte[] key = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
 
         SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -39,10 +39,11 @@ public class JwtService : IJwtService
             {
                 new Claim("Id", user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("Role", role),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }),
-            Expires = DateTime.UtcNow.AddSeconds(35),
+            Expires = DateTime.UtcNow.AddSeconds(35000),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 

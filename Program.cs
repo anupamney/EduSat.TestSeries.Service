@@ -5,16 +5,33 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using EduSat.TestSeries.Service.Config;
 using EduSat.TestSeries.Service.Data;
+using EduSat.TestSeries.Service.Services.Interfaces;
+using EduSat.TestSeries.Service.Services.Concrete;
+using Edusat.TestSeries.Service.Domain.Models;
 using EduSat.TestSeries.Service.Services;
+using EduSat.TestSeries.Service.Provider;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      //policy =>
+                      //{
+                      //    policy.WithOrigins("http://localhost:3000");
+                      //    policy.WithHeaders("Content-Type");
+                      //});
+                      builder =>
+                      {
+                          builder.AllowAnyOrigin()
+                                 .AllowAnyMethod()
+                                 .AllowAnyHeader();
+                      });
+});
+
 
 builder.Services.AddDbContext<ApiDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("Default"))
@@ -30,9 +47,10 @@ TokenValidationParameters? tokenValidationParams = new TokenValidationParameters
     ValidateIssuerSigningKey = true,
     IssuerSigningKey = new SymmetricSecurityKey(key),
     ValidateIssuer = false,
+    ClockSkew = TimeSpan.Zero,
     ValidateAudience = false,
     ValidateLifetime = true,
-    RequireExpirationTime = false
+    RequireExpirationTime = true
 };
 
 builder.Services.AddAuthentication(options =>
@@ -49,10 +67,20 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddSingleton(tokenValidationParams);
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => { options.SignIn.RequireConfirmedAccount = true; })
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApiDbContext>();
 
-builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IJwtService, JwtService>()
+    .AddScoped<IUserContext,UserContext>()
+    .AddScoped<ISchoolsService,SchoolsService>()
+    .AddScoped<ISchoolsProvider,SchoolsProvider>();
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -63,11 +91,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseCors(MyAllowSpecificOrigins);
+
 
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

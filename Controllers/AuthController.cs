@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using EduSat.TestSeries.Service.Dtos.Auth;
-using EduSat.TestSeries.Service.Dtos.Auth.Request;
-using EduSat.TestSeries.Service.Dtos.Auth.Response;
-using EduSat.TestSeries.Service.Services;
+using EduSat.TestSeries.Service.Models;
+using EduSat.TestSeries.Service.Models.DTOs.Auth.Request;
+using EduSat.TestSeries.Service.Models.DTOs.Auth.Response;
+using EduSat.TestSeries.Service.Services.Interfaces;
 
 namespace EduSat.TestSeries.Service.Controllers;
 
@@ -13,12 +13,15 @@ public class AuthController : ControllerBase
 {
     // Identity package
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IJwtService _jwtService;
 
-    public AuthController(UserManager<IdentityUser> userManager, IJwtService jwtService)
+    public AuthController(UserManager<IdentityUser> userManager, IJwtService jwtService, RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _jwtService = jwtService;
+        _roleManager = roleManager;
+
     }
 
     [HttpPost("register")]
@@ -46,7 +49,16 @@ public class AuthController : ControllerBase
             IdentityResult? created = await _userManager.CreateAsync(newUser, user.Password);
             if (created.Succeeded)
             {
-                AuthResult authResult = await _jwtService.GenerateToken(newUser);
+
+                if (!await _roleManager.RoleExistsAsync(UserRoles.Staff))
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.Staff));
+
+                var staffRole = await _roleManager.FindByNameAsync(UserRoles.Staff);
+
+                // Assign the role to the created user
+                var result = await _userManager.AddToRoleAsync(newUser, staffRole.Name);
+                var role = await _userManager.GetRolesAsync(newUser);
+                AuthResult authResult = await _jwtService.GenerateToken(newUser, role[0]);
                 //return a token
                 return Ok(authResult);
             }
@@ -86,7 +98,8 @@ public class AuthController : ControllerBase
             bool isUserCorrect = await _userManager.CheckPasswordAsync(existingUser, user.Password);
             if (isUserCorrect)
             {
-                AuthResult authResult = await _jwtService.GenerateToken(existingUser);
+                var role = await _userManager.GetRolesAsync(existingUser);
+                AuthResult authResult = await _jwtService.GenerateToken(existingUser, role[0]);
                 //return a token
                 return Ok(authResult);
             }
@@ -125,7 +138,9 @@ public class AuthController : ControllerBase
             }
 
             var tokenUser = await _userManager.FindByIdAsync(verified.UserId);
-            AuthResult authResult = await _jwtService.GenerateToken(tokenUser);
+
+            var role = await _userManager.GetRolesAsync(tokenUser);
+            AuthResult authResult = await _jwtService.GenerateToken(tokenUser, role[0]);
             //return a token
             return Ok(authResult);
 

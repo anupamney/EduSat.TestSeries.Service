@@ -1,4 +1,4 @@
-namespace EduSat.TestSeries.Service.Dtos.Auth;
+namespace EduSat.TestSeries.Service.Models.DTOs.Auth.Response;
 
 public class AuthResult
 {

@@ -1,6 +1,6 @@
-namespace EduSat.TestSeries.Service.Dtos.Auth.Response;
+namespace EduSat.TestSeries.Service.Models.DTOs.Auth.Response;
 
-public class RefreshTokenResponseDTO 
+public class RefreshTokenResponseDTO
 {
     public string UserId { get; set; }
     public bool Success { get; set; }
