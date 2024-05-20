@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EduSat.TestSeries.Service.Models.DTOs
+namespace EduSat.TestSeries.Service.Models.DTOs.Auth.Request
 {
     public class UserResgistrationRequestDto
     {

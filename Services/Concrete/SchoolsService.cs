@@ -28,5 +28,34 @@ namespace EduSat.TestSeries.Service.Services.Concrete
 
             return await _schoolsProvider.PostSchool(school);
         }
+
+        public async Task<List<Teacher>> GetTeachers()
+        {
+            return await _schoolsProvider.GetTeachersAsync();
+        }
+        public async Task<bool> AddTeacher(Teacher teacher)
+        {
+            return await _schoolsProvider.AddTeacher(teacher);
+        }
+
+        public async Task<bool> AddClass(Class clas)
+        {
+            return await _schoolsProvider.AddClass(clas);
+        }
+        public async Task<List<Class>> GetClasses()
+        {
+            return await _schoolsProvider.GetClasses();
+        }
+
+        public async Task<bool> AddScholarship(Scholarship scholarship)
+        {
+            scholarship.StaffId = _userContext.UserId;
+            return await _schoolsProvider.AddScholarship(scholarship);
+        }
+
+        public async Task<List<Scholarship>> GetScholarships()
+        {
+            return await _schoolsProvider.GetScholarships();
+        }
     }
 }
