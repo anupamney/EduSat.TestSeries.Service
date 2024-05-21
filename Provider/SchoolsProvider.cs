@@ -169,7 +169,7 @@ namespace EduSat.TestSeries.Service.Provider
             return classes;
         }
 
-        public async Task<bool> AddScholarship(Scholarship scholarship)
+        public async Task<int> AddScholarship(Scholarship scholarship)
         {
             var connString = _configuration.GetConnectionString("Default");
             using var connection = new SqliteConnection(connString);
@@ -188,8 +188,13 @@ namespace EduSat.TestSeries.Service.Provider
             command.Parameters.AddWithValue("@Total_Students", scholarship.NumberOfStudents);
 
             int rowsAffected = await command.ExecuteNonQueryAsync();
+            if (rowsAffected > 0)
+            {
+                   command.CommandText = @"SELECT last_insert_rowid()";
+                return  (int)(long)await command.ExecuteScalarAsync();
+            }
 
-            return rowsAffected > 0;
+            return rowsAffected;
         }
 
         public async Task<List<Scholarship>> GetScholarships()
@@ -222,6 +227,57 @@ namespace EduSat.TestSeries.Service.Provider
             }
 
             return scholarships;
+        }
+
+        public async Task<bool> AddPayment(Payment payment)
+        {
+            var connString = _configuration.GetConnectionString("Default");
+            using var connection = new SqliteConnection(connString);
+
+            await connection.OpenAsync(); // Open the connection asynchronously
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"Insert into payment_details (Scholarship_Id, Total_payment, Paid,Payment_Status)
+                                    VALUES (@Scholarship_Id,@Total_payment,@Paid,@Payment_Status)";
+
+            command.Parameters.AddWithValue("@Scholarship_Id", payment.ScholarshipId);
+            command.Parameters.AddWithValue("@Total_payment", payment.TotalPayment);
+            command.Parameters.AddWithValue("@Paid", payment.AmountPaid);
+            command.Parameters.AddWithValue("@Payment_Status", payment.PaymentStatus);
+            
+            int rowsAffected = await command.ExecuteNonQueryAsync();
+
+            return rowsAffected > 0;
+        }
+
+        public async Task<List<Payment>> GetPayments()
+        {
+            var payments = new List<Payment>();
+            var connString = _configuration.GetConnectionString("Default");
+            using var connection = new SqliteConnection(connString);
+
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"SELECT * FROM payment_details;";
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (await reader.ReadAsync())
+                {
+                    var payment = new Payment
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        ScholarshipId = reader.GetInt32(reader.GetOrdinal("Scholarship_Id")),
+                        TotalPayment = reader.GetDecimal(reader.GetOrdinal("Total_payment")),
+                        AmountPaid = reader.GetDecimal(reader.GetOrdinal("Paid")),
+                        PaymentStatus = reader.GetBoolean(reader.GetOrdinal("Payment_Status"))
+                    };
+                    payments.Add(payment);
+                }
+            }
+
+            return payments;
         }
     }
 }

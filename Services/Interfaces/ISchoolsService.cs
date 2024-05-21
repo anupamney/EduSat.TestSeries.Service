@@ -10,7 +10,9 @@ namespace EduSat.TestSeries.Service.Services.Interfaces
         Task<List<Teacher>> GetTeachers();
         Task<bool> AddClass(Class clas);
         Task<List<Class>> GetClasses();
-        Task<bool> AddScholarship(Scholarship scholarship);
+        Task<int> AddScholarship(Scholarship scholarship);
         Task<List<Scholarship>> GetScholarships();
+        Task<bool> AddPayment(Payment payment);
+        Task<List<Payment>> GetPayments();
     }
 }

@@ -47,7 +47,7 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             return await _schoolsProvider.GetClasses();
         }
 
-        public async Task<bool> AddScholarship(Scholarship scholarship)
+        public async Task<int> AddScholarship(Scholarship scholarship)
         {
             scholarship.StaffId = _userContext.UserId;
             return await _schoolsProvider.AddScholarship(scholarship);
@@ -57,5 +57,15 @@ namespace EduSat.TestSeries.Service.Services.Concrete
         {
             return await _schoolsProvider.GetScholarships();
         }
+
+        public async Task<bool> AddPayment(Payment payment)
+        {
+            return await _schoolsProvider.AddPayment(payment);
+        }
+        public async Task<List<Payment>> GetPayments()
+        {
+            return await _schoolsProvider.GetPayments();
+        }
+
     }
 }
