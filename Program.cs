@@ -73,7 +73,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 builder.Services.AddScoped<IJwtService, JwtService>()
     .AddScoped<IUserContext,UserContext>()
     .AddScoped<ISchoolsService,SchoolsService>()
-    .AddScoped<ISchoolsProvider,SchoolsProvider>();
+    .AddScoped<ISchoolsProvider,SchoolsProvider>()
+    .AddScoped<IReportsProvider,ReportsProvider>()
+    .AddScoped<IReportsService,ReportsService>();
 
 // Add services to the container.
 
