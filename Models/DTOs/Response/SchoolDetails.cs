@@ -10,6 +10,9 @@
         public decimal TotalPayment { get; set; }
         public decimal TotalPaymentReceived { get; set; }
         public bool PaymentStatus { get; set; }
+        public string AcademicYear { get; set; }
+        public string District { get; set; }
+        public string ClassName { get; set; }
 
     }
 }

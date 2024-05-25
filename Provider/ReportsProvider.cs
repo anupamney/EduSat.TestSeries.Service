@@ -20,7 +20,7 @@ namespace EduSat.TestSeries.Service.Provider
             connection.Open();
 
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT \r\n    sch.name,\r\n    sch.school_id,\r\n    tea.first_name,\r\n    tea.last_name,\r\n    tea.email_id,\r\n    sd.total_students,\r\n    pd.paid,\r\n    pd.TOTAL_PAYMENT,\r\n    pd.payment_status\r\nFROM \r\n    scholarships_details sd \r\nLEFT JOIN \r\n    schools sch ON sch.school_id = sd.school_id\r\nLEFT JOIN \r\n    teachers tea ON sd.teacher_id = tea.id\r\nLEFT JOIN \r\n    class cl ON cl.id = sd.class_id\r\nLEFT JOIN \r\n    payment_details pd ON pd.scholarship_id = sd.id;";
+            command.CommandText = "SELECT \r\n    sch.name,\r\n    sch.school_id,\r\n    tea.first_name,\r\n    tea.last_name,\r\n    tea.email_id,\r\n    sd.total_students,\r\n    pd.paid,\r\n    pd.TOTAL_PAYMENT,\r\n    pd.payment_status,\r\n    sd.ACADEMIC_YEAR,\r\n    sch.DISTRICT,\r\n    cl.NAME as class_name\r\nFROM \r\n    scholarships_details sd \r\nLEFT JOIN \r\n    schools sch ON sch.school_id = sd.school_id\r\nLEFT JOIN \r\n    teachers tea ON sd.teacher_id = tea.id\r\nLEFT JOIN \r\n    class cl ON cl.id = sd.class_id\r\nLEFT JOIN \r\n    payment_details pd ON pd.scholarship_id = sd.id;";
             using (var reader = command.ExecuteReader())
             {
                 while (await reader.ReadAsync())
@@ -34,7 +34,10 @@ namespace EduSat.TestSeries.Service.Provider
                         TotalStudents = reader.GetInt32(reader.GetOrdinal("total_students")),
                         TotalPayment = reader.GetDecimal(reader.GetOrdinal("total_payment")),
                         TotalPaymentReceived = reader.GetDecimal(reader.GetOrdinal("paid")),
-                        PaymentStatus = reader.GetBoolean(reader.GetOrdinal("payment_status"))
+                        PaymentStatus = reader.GetBoolean(reader.GetOrdinal("payment_status")),
+                        AcademicYear = reader.GetString(reader.GetOrdinal("ACADEMIC_YEAR")),
+                        District = reader.GetString(reader.GetOrdinal("DISTRICT")),
+                        ClassName = reader.GetString(reader.GetOrdinal("class_name"))
                      };
                      schoolDetails.Add(sd);
                 }
