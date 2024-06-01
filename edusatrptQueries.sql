@@ -3,6 +3,7 @@
 -- Use the ▷ button in the top right corner to run the entire file.
 
 SELECT 
+sd.ID,
     sch.name,
     sch.school_id,
     tea.first_name,

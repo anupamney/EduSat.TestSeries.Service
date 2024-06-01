@@ -2,6 +2,7 @@
 {
     public class SchoolDetails
     {
+        public int Id { get; set; }
         public string SchoolName { get; set; }
         public int SRN { get; set; }
         public string TeacherName { get; set; }
