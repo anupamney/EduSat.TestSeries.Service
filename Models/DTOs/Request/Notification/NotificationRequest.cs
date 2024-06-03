@@ -2,7 +2,10 @@
 {
     public class NotificationRequest
     {
-        public MessageDetails[] MessageDetails { get; set; } = [];
+        public string[] Recipients { get; set; } = [];
+        public string Subject { get; set; } = string.Empty;
+        public string Body { get; set; } = string.Empty ;
+        public IFormFile? Attachment { get; set; }
         public string Mode { get; set; } = string.Empty;
 
     }

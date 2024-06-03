@@ -14,10 +14,6 @@ namespace EduSat.TestSeries.Service.Services.Concrete
 
         public async Task<bool> Notify(NotificationRequest notificationRequest)
         {
-            foreach( var x in _services)
-            {
-                Console.WriteLine(x.GetType().Name);
-            }
             var instance = _services.FirstOrDefault(x => x.GetType().Name == notificationRequest.Mode);
             if (instance == null)
             {
@@ -25,9 +21,9 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             }
 
             var tasks = new List<Task>();
-            foreach (var messageDetails in notificationRequest.MessageDetails)
+            foreach (var email in notificationRequest.Recipients)
             {
-                tasks.Add(instance.sendMessage(messageDetails));
+                tasks.Add(instance.sendMessage(notificationRequest,email));
             }
 
             await Task.WhenAll(tasks);

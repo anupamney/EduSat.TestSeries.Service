@@ -16,7 +16,7 @@ namespace EduSat.TestSeries.Service.Controllers
             _notificationService = notificationService;
         }
         [HttpPost]
-        public async Task<bool> NotifyTeachersAsync(NotificationRequest notificationRequest)
+        public async Task<bool> NotifyTeachersAsync([FromForm] NotificationRequest notificationRequest)
         {
             return await _notificationService.Notify(notificationRequest);
         }

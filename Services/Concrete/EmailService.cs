@@ -16,25 +16,54 @@ namespace EduSat.TestSeries.Service.Services.Concrete
         {
             _config = new EmailConfig
             {
-                SmtpUsername = "anupamshandilya28@gmail.com",
-                SmtpPassword = "rzrz tqss jhuh risy",
-                FromName = "Your Name",
-                FromAddress = "anupamshandilya28@gmail.com"
+                SmtpUsername = "testseriesedusat@gmail.com",
+                SmtpPassword = "etcb oyor fxpz aybo",
+                FromName = "Edusat Test Series",
+                FromAddress = "testseriesedusat@gmail.com"
             };
 
         }
-        public async Task<bool> sendMessage(MessageDetails messageDetails)
+        public async Task<bool> sendMessage(NotificationRequest notificationRequest, string email)
         {
             try
             {
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(_config.FromName, _config.FromAddress));
-                message.To.Add(new MailboxAddress("", messageDetails.Recipient));
-                message.Subject = messageDetails.Subject;
-                message.Body = new TextPart(TextFormat.Plain)
+                message.To.Add(new MailboxAddress("", email));
+                message.Subject = notificationRequest.Subject;
+                var body = new TextPart(TextFormat.Plain)
                 {
-                    Text = messageDetails.Body
+                    Text = notificationRequest.Body
                 };
+                
+                if (notificationRequest.Attachment != null)
+                {
+                    byte[] fileBytes;
+                    using (var stream = new MemoryStream())
+                    {
+                        await notificationRequest.Attachment.CopyToAsync(stream);
+                        fileBytes = stream.ToArray();
+                    }
+
+                    var attachment = new MimePart(notificationRequest.Attachment.ContentType)
+                    {
+                        Content = new MimeContent(new MemoryStream(fileBytes), ContentEncoding.Default),
+                        ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                        ContentTransferEncoding = ContentEncoding.Base64,
+                        FileName = Path.GetFileName(notificationRequest.Attachment.FileName)
+                    };
+
+                    var multipart = new Multipart("mixed");
+                    multipart.Add(body);
+                    multipart.Add(attachment);
+
+                    message.Body = multipart;
+                }
+                else
+                {
+                    message.Body = body;
+                }
+
 
                 using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {

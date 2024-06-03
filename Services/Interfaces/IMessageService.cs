@@ -4,6 +4,6 @@ namespace EduSat.TestSeries.Service.Services.Interfaces
 {
     public interface IMessageService
     {
-        Task<bool> sendMessage(MessageDetails messageDetails);
+        Task<bool> sendMessage(NotificationRequest messageDetails,string contact);
     }
 }
