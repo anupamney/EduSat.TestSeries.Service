@@ -1,11 +1,12 @@
-﻿using EduSat.TestSeries.Service.Models.DTOs.Request.Notification;
-using EduSat.TestSeries.Service.Services.Interfaces;
+﻿using EduSat.TestSeries.Service.Services.Interfaces;
 using System.Net.Mail;
 using System.Net;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
+using EduSat.TestSeries.Service.Domain.Models.Notification;
+using EduSat.TestSeries.Service.Models.DTOs.Request.Notification;
 
 namespace EduSat.TestSeries.Service.Services.Concrete
 {

@@ -77,7 +77,8 @@ builder.Services.AddScoped<IJwtService, JwtService>()
     .AddScoped<IReportsProvider,ReportsProvider>()
     .AddScoped<IReportsService,ReportsService>()
     .AddScoped<INotificationService,NotificationService>()
-    .AddScoped<IMessageService, EmailService>();
+    .AddScoped<IMessageService, EmailService>()
+    .AddScoped<IMessageService, WhatsappService>();
 
 // Add services to the container.
 

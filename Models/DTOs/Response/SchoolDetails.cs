@@ -7,6 +7,7 @@
         public int SRN { get; set; }
         public string TeacherName { get; set; }
         public string TeacherEmail { get; set; }
+        public string TeacherContact { get; set; }
         public int TotalStudents { get; set; }
         public decimal TotalPayment { get; set; }
         public decimal TotalPaymentReceived { get; set; }
