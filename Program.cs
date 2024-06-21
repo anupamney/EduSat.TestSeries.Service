@@ -71,14 +71,16 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApiDbContext>();
 
 builder.Services.AddScoped<IJwtService, JwtService>()
-    .AddScoped<IUserContext,UserContext>()
-    .AddScoped<ISchoolsService,SchoolsService>()
-    .AddScoped<ISchoolsProvider,SchoolsProvider>()
-    .AddScoped<IReportsProvider,ReportsProvider>()
-    .AddScoped<IReportsService,ReportsService>()
-    .AddScoped<INotificationService,NotificationService>()
+    .AddScoped<IUserContext, UserContext>()
+    .AddScoped<ISchoolsService, SchoolsService>()
+    .AddScoped<ISchoolsProvider, SchoolsProvider>()
+    .AddScoped<IReportsProvider, ReportsProvider>()
+    .AddScoped<IReportsService, ReportsService>()
+    .AddScoped<INotificationService, NotificationService>()
     .AddScoped<IMessageService, EmailService>()
-    .AddScoped<IMessageService, WhatsappService>();
+    .AddScoped<IMessageService, WhatsappService>()
+    .AddScoped<ITagDetailsService, TagDetailsService>()
+    .AddScoped<ITagDetailsProvider, TagDetailsProvider>();
 
 // Add services to the container.
 

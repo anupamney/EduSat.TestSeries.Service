@@ -31,4 +31,8 @@
     <ProjectReference Include="..\Edusat.TestSeries.Service.Domain\Edusat.TestSeries.Service.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Templates\" />
+  </ItemGroup>
+
 </Project>

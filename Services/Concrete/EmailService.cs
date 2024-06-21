@@ -7,6 +7,8 @@ using MimeKit;
 using MimeKit.Text;
 using EduSat.TestSeries.Service.Domain.Models.Notification;
 using EduSat.TestSeries.Service.Models.DTOs.Request.Notification;
+using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace EduSat.TestSeries.Service.Services.Concrete
 {
@@ -32,6 +34,7 @@ namespace EduSat.TestSeries.Service.Services.Concrete
                 message.From.Add(new MailboxAddress(_config.FromName, _config.FromAddress));
                 message.To.Add(new MailboxAddress("", email));
                 message.Subject = notificationRequest.Subject;
+
                 var body = new TextPart(TextFormat.Plain)
                 {
                     Text = notificationRequest.Body

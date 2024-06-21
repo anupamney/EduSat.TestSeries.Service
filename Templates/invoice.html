@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Receipt Template</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .container {
+        width: 480px;
+        /* Adjust the width as needed */
+        margin: 20px auto;
+        border: 1px solid black;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .header {
+        text-align: center;
+        border-bottom: 1px solid black;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 1.2em;
+      }
+
+      .header h2 {
+        margin: 10px 0;
+        font-size: 1em;
+      }
+
+      .header div {
+        margin: 5px 0;
+        font-size: 0.9em;
+      }
+
+      .info {
+        margin-bottom: 20px;
+      }
+
+      .info div {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+      }
+
+      .info div span {
+        display: inline-block;
+        width: 120px;
+      }
+
+      .info div input {
+        flex: 1;
+        border: none;
+        border-bottom: 1px solid black;
+        outline: none;
+        padding: 5px;
+        font-size: 0.9em;
+      }
+
+      .table-container {
+        margin-bottom: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+        font-size: 0.9em;
+      }
+
+      th:nth-child(5),
+      td:nth-child(5) {
+        /* Adjusting the width of the 5th column */
+        width: 100px;
+        /* Decreased width */
+      }
+
+      .spacer-row td {
+        height: 200px;
+        /* Adjust the height as needed */
+        border-right: 1px solid black;
+      }
+
+      .footer-row td {
+        border-top: none;
+      }
+
+      .footer {
+        padding-top: 20px;
+        font-size: 0.9em;
+      }
+
+      .footer .left-align {
+        text-align: left;
+      }
+
+      .footer .right-align {
+        text-align: right;
+      }
+
+      .footer div {
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>अवतरण</h2>
+        <h1>एज्युटेस्ट टेस्ट सिरीज, सातारा</h1>
+        <h2>संपादिका - सौ. गीतांजली शैलेश खासबने</h2>
+        <div>एकतानगर, दहिवडी, ता. माण, जि. सातारा</div>
+        <div>पीएन - 415508, मोबाईल - 7585732707</div>
+      </div>
+
+      <div class="info">
+        <!-- <div><span>पावती क्र.: </div>
+        <div><span>कॅश मेमो: </div>
+        <div><span>दि.: /  /20</div> -->
+        <div>
+          <span>पावती क्र.: </span> दि.:&nbsp&nbsp&nbsp / &nbsp /&nbsp20
+        </div>
+
+        <div><span>नांव: </span><input type="text" /></div>
+        <div><span>पत्ता: </span><input type="text" /></div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>अ.क्र.</th>
+              <th>तपशील</th>
+              <th>नग</th>
+              <th>दर</th>
+              <th style="width: 100px">एकूण रक्कम रुपये</th>
+              <!-- Adjusted width -->
+              <th>पैसे</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="spacer-row">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr class="footer-row">
+              <td colspan="2">अक्षरी रुपये:</td>
+              <td colspan="2">रोख मिळाले.</td>
+              <td colspan="2"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer">
+        <div class="left-align">एक लढाई अभ्यासासाठी ......</div>
+        <div class="right-align">संपादिका</div>
+        <div class="right-align">एज्युटेस्ट टेस्ट सिरीज, सातारा</div>
+      </div>
+    </div>
+  </body>
+</html>
