@@ -1,4 +1,5 @@
 ﻿using EduSat.TestSeries.Service.Models.DTOs.Request.Notification;
+using EduSat.TestSeries.Service.Models.DTOs.Response;
 using EduSat.TestSeries.Service.Services.Interfaces;
 using System.Text.RegularExpressions;
 
@@ -15,7 +16,7 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             _tagDetailsService = tagDetailsService;
         }
 
-        public async Task<bool> Notify(NotificationRequest notificationRequest)
+        public async Task<bool> Notify(NotificationRequest notificationRequest, SchoolDetails[] recipients)
         {
             var instance = _services.FirstOrDefault(x => x.GetType().Name == notificationRequest.Mode);
             if (instance == null)
@@ -24,10 +25,10 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             }
 
             var tasks = new List<Task>();
-            for (int i= 0; i < notificationRequest.Recipients.Length;i++)
+            for (int i= 0; i < recipients.Length;i++)
             {
-                notificationRequest.Body = await ResolveTags(notificationRequest.Body, notificationRequest.srns[i]);
-                tasks.Add(instance.sendMessage(notificationRequest, notificationRequest.Recipients[i]));
+                notificationRequest.Body = await ResolveTags(notificationRequest.Body, recipients[i]);
+                tasks.Add(instance.sendMessage(notificationRequest, recipients[i]));
             }
 
             await Task.WhenAll(tasks);
@@ -35,11 +36,11 @@ namespace EduSat.TestSeries.Service.Services.Concrete
 
         }
 
-        private async Task<string> ResolveTags(string body, string srn)
+        private async Task<string> ResolveTags(string body, SchoolDetails recipient)
         {
             List<string> words = ExtractWordsBetweenSymbols(body, '@');
 
-            Dictionary<string, string> replacements = await CallServicesDynamicallyAsync(words, srn);
+            Dictionary<string, string> replacements = await InitialiseTags(words, recipient);
 
             string updatedInput = ReplacePlaceholders(body, replacements);
 
@@ -59,26 +60,25 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             return words;
         }
 
-        private async Task<Dictionary<string, string>> CallServicesDynamicallyAsync(List<string> words,string srn)
+        private async Task<Dictionary<string, string>> InitialiseTags(List<string> words,SchoolDetails recipient)
         {
-            Dictionary<string, Func<string,Task<string>>> services = new Dictionary<string, Func<string,Task<string>>>
+            Dictionary<string, string> tagsMap = new Dictionary<string, string>
         {
-            { "FirstName", _tagDetailsService.GetTeachersFirstName},
-            { "LastName", _tagDetailsService.GetTeachersLastName},
-            {"RemainingAmount", _tagDetailsService.GetRemainingAmount},
-            {"TotalAmount", _tagDetailsService.GetTotalAmount },
-            {"ReceiptLink", _tagDetailsService.GetReceiptLink },
-            {"InvoiceLink", _tagDetailsService.GetInvoiceLink }
+            { "FirstName",recipient.TeacherFirstName},
+            { "LastName", recipient.TeacherLastName},
+            {"RemainingAmount", (recipient.TotalPayment-recipient.TotalPaymentReceived).ToString()},
+            {"TotalAmount", recipient.TotalPayment.ToString() },
+            {"ReceiptLink", _tagDetailsService.GetReceiptLink() },
+            {"InvoiceLink", _tagDetailsService.GetInvoiceLink() }
         };
 
             Dictionary<string, string> replacements = new Dictionary<string, string>();
 
             foreach (string word in words)
             {
-                if (services.ContainsKey(word))
+                if (tagsMap.ContainsKey(word))
                 {
-                    var result = await services[word](srn);
-                    replacements.Add($"@{word}@", result);
+                    replacements[$"@{word}@"] = tagsMap[word];
                 }
                 else
                 {

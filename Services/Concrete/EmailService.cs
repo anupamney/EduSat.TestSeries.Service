@@ -9,6 +9,7 @@ using EduSat.TestSeries.Service.Domain.Models.Notification;
 using EduSat.TestSeries.Service.Models.DTOs.Request.Notification;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using EduSat.TestSeries.Service.Models.DTOs.Response;
 
 namespace EduSat.TestSeries.Service.Services.Concrete
 {
@@ -26,13 +27,13 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             };
 
         }
-        public async Task<bool> sendMessage(NotificationRequest notificationRequest, string email)
+        public async Task<bool> sendMessage(NotificationRequest notificationRequest, SchoolDetails recipient)
         {
             try
             {
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(_config.FromName, _config.FromAddress));
-                message.To.Add(new MailboxAddress("", email));
+                message.To.Add(new MailboxAddress("", recipient.TeacherEmail));
                 message.Subject = notificationRequest.Subject;
 
                 var body = new TextPart(TextFormat.Plain)

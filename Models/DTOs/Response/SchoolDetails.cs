@@ -5,7 +5,8 @@
         public int Id { get; set; }
         public string SchoolName { get; set; }
         public int SRN { get; set; }
-        public string TeacherName { get; set; }
+        public string TeacherFirstName { get; set; }
+        public string TeacherLastName { get; set; }
         public string TeacherEmail { get; set; }
         public string TeacherContact { get; set; }
         public int TotalStudents { get; set; }

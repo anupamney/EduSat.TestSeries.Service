@@ -1,5 +1,6 @@
 ﻿using Edusat.TestSeries.Service.Domain.Models.Notification;
 using EduSat.TestSeries.Service.Models.DTOs.Request.Notification;
+using EduSat.TestSeries.Service.Models.DTOs.Response;
 using EduSat.TestSeries.Service.Services.Interfaces;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
@@ -20,7 +21,7 @@ namespace EduSat.TestSeries.Service.Services.Concrete
                 TwilioPhoneNumber = new PhoneNumber("whatsapp:+14155238886")
             };
         }
-        public Task<bool> sendMessage(NotificationRequest messageDetails, string contact)
+        public Task<bool> sendMessage(NotificationRequest messageDetails, SchoolDetails recipient)
         {
             TwilioClient.Init(_whatsappConfig.TwilioAccountSid, _whatsappConfig.TwilioAuthToken);
             try
@@ -29,7 +30,7 @@ namespace EduSat.TestSeries.Service.Services.Concrete
                 var message = MessageResource.Create(
                     body: "Here is an image for you!",
                     from: _whatsappConfig.TwilioPhoneNumber,
-                    to: new PhoneNumber($"whatsapp:+91{contact}")
+                    to: new PhoneNumber($"whatsapp:+91{recipient.TeacherContact}")
                 );
 
                 // Output the message SID to the console

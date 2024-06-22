@@ -12,16 +12,16 @@ namespace EduSat.TestSeries.Service.Provider
             _configuration = configuration;
         }
 
-        public async Task<(int, int)> GetSchoolDetails(int srn)
+        public async Task<(int, int)> GetSchoolDetails(int sdid)
         {
             var schoolDetails = new SchoolDetails();
             var connString =  _configuration.GetConnectionString("Default");
             using var connection = new SqliteConnection(connString);
             using var command = connection.CreateCommand();
             connection.Open();
-            command.CommandText = $"SELECT teacher_id,id FROM Scholarships_details where school_id={srn};";
+            command.CommandText = $"SELECT teacher_id,id FROM Scholarships_details where id={sdid};";
 
-            int sdid=0,teacherid=0;
+            int teacherid=0;
             using (var reader = command.ExecuteReader())
             {
                 while (await reader.ReadAsync())
