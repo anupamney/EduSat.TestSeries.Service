@@ -1,12 +1,10 @@
-﻿namespace EduSat.TestSeries.Service.Services.Interfaces
+﻿using EduSat.TestSeries.Service.Models.DTOs.Response;
+
+namespace EduSat.TestSeries.Service.Services.Interfaces
 {
     public interface ITagDetailsService
     {
-        //Task<string> GetTeachersFirstName(string srn);
-        //Task<string> GetTeachersLastName(string srn);
-        //Task<string> GetRemainingAmount(string srn);
-        //Task<string> GetTotalAmount(string srn);
-        string GetReceiptLink();
-        string GetInvoiceLink();
+        Task<string> GetReceiptLinkAsync(SchoolDetails recipient);
+        Task<string> GetInvoiceLinkAsync(SchoolDetails recipient);
     }
 }

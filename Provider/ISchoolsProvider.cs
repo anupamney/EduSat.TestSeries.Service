@@ -17,5 +17,6 @@ namespace EduSat.TestSeries.Service.Provider
         Task<List<Scholarship>> GetScholarships();
         Task<bool> AddPayment(Payment payment);
         Task<List<Payment>> GetPayments();
+        Task<(string, string)> GetAddress(int sdid);
     }
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -134,16 +134,21 @@
       </div>
 
       <div class="info">
-        <!-- <div><span>पावती क्र.: </div>
-        <div><span>कॅश मेमो: </div>
-        <div><span>दि.: /  /20</div> -->
         <div>
-          <span>पावती क्र.: </span> <span>कॅश मेमो: </span> दि.:&nbsp&nbsp&nbsp
+          <span>पावती क्र.: </span>
+          <span>कॅश मेमो: </span>
+          दि.:&nbsp&nbsp&nbsp
           / &nbsp /&nbsp20
         </div>
 
-        <div><span>नांव: </span><input type="text" /></div>
-        <div><span>पत्ता: </span><input type="text" /></div>
+        <div>
+          <span>नांव: </span>
+          @Model.Name
+        </div>
+        <div>
+          <span>पत्ता: </span>
+          @Model.Address
+        </div>
       </div>
 
       <div class="table-container">
@@ -160,14 +165,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="spacer-row">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
+            @foreach (var item in Model.Items)
+            {
+              <tr>
+                <td>@item.SerialNumber</td>
+                <td>@item.Details</td>
+                <td>@item.Quantity</td>
+                <td>@item.Rate</td>
+                <td>@item.TotalAmount</td>
+                <td>@item.Paise</td>
+              </tr>
+            }
             <tr class="footer-row">
               <td colspan="2">अक्षरी रुपये:</td>
               <td colspan="2">रोख मिळाले.</td>

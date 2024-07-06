@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Receipt Template</title>
+    <title>Invoice</title>
     <style>
       body {
         font-family: "Arial", sans-serif;
@@ -139,11 +139,18 @@
         <div><span>कॅश मेमो: </div>
         <div><span>दि.: /  /20</div> -->
         <div>
-          <span>पावती क्र.: </span> दि.:&nbsp&nbsp&nbsp / &nbsp /&nbsp20
+          <span style="white-space: nowrap">पावती क्र.: @serialNo@ </span>
+          दि.:&nbsp&nbsp&nbsp @date@ / @month@ &nbsp /&nbsp @year@
         </div>
 
-        <div><span>नांव: </span><input type="text" /></div>
-        <div><span>पत्ता: </span><input type="text" /></div>
+        <div>
+          <span style="white-space: nowrap">नांव: @firstname@ @lastname@</span>
+        </div>
+        <div>
+          <span style="white-space: nowrap"
+            >पत्ता: @Addressline1@ @Addressline2@</span
+          >
+        </div>
       </div>
 
       <div class="table-container">
@@ -161,15 +168,14 @@
           </thead>
           <tbody>
             <tr class="spacer-row">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>@counter@</td>
+              <td>@classname@</td>
+              <td>@numberOfStudents@</td>
+              <td>@rate@</td>
+              <td>@amountPaid@</td>
+              <td>0.00</td>
             </tr>
             <tr class="footer-row">
-              <td colspan="2">अक्षरी रुपये:</td>
               <td colspan="2">रोख मिळाले.</td>
               <td colspan="2"></td>
             </tr>

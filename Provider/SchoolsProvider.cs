@@ -241,7 +241,7 @@ namespace EduSat.TestSeries.Service.Provider
                                     VALUES (@Scholarship_Id,@Total_payment,@Paid,@Payment_Status)";
 
             command.Parameters.AddWithValue("@Scholarship_Id", payment.ScholarshipId);
-            command.Parameters.AddWithValue("@Total_payment", payment.TotalPayment);
+            command.Parameters.AddWithValue("@Total_payment", payment.TotalAmount);
             command.Parameters.AddWithValue("@Paid", payment.AmountPaid);
             command.Parameters.AddWithValue("@Payment_Status", payment.PaymentStatus);
             
@@ -269,7 +269,7 @@ namespace EduSat.TestSeries.Service.Provider
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("Id")),
                         ScholarshipId = reader.GetInt32(reader.GetOrdinal("Scholarship_Id")),
-                        TotalPayment = reader.GetDecimal(reader.GetOrdinal("Total_payment")),
+                        TotalAmount = reader.GetDecimal(reader.GetOrdinal("Total_payment")),
                         AmountPaid = reader.GetDecimal(reader.GetOrdinal("Paid")),
                         PaymentStatus = reader.GetBoolean(reader.GetOrdinal("Payment_Status"))
                     };
@@ -278,6 +278,31 @@ namespace EduSat.TestSeries.Service.Provider
             }
 
             return payments;
+        }
+
+        public async Task<(string, string)> GetAddress(int sdid)
+        {
+            var connString = _configuration.GetConnectionString("Default");
+            using var connection = new SqliteConnection(connString);
+
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"SELECT s.ADDRESS_LINE_1,s.ADDRESS_LINE_2 FROM SCHOLARSHIPS_DETAILS LEFT OUTER JOIN SCHOOLS s on
+ SCHOLARSHIPS_DETAILS.SCHOOL_ID = s.SCHOOL_ID WHERE SCHOLARSHIPS_DETAILS.ID = @sdid;";
+
+            command.Parameters.AddWithValue("@sdid", sdid);
+            string one=string.Empty, two=string.Empty;
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (await reader.ReadAsync())
+                {
+                    one=reader.GetString(reader.GetOrdinal("Address_line_1"));
+                    two = reader.GetString(reader.GetOrdinal("Address_line_2"));
+                }
+            }
+            return (one, two);
         }
     }
 }
