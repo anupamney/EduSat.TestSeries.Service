@@ -9,13 +9,11 @@ namespace EduSat.TestSeries.Service.Services.Concrete
     public class NotificationService: INotificationService
     {
         private readonly IEnumerable<IMessageService> _services;
-        private readonly ITagDetailsService _tagDetailsService;
         private readonly ITagService _tagService;
 
-        public NotificationService(IEnumerable<IMessageService> services, ITagDetailsService tagDetailsService, ITagService tagService)
+        public NotificationService(IEnumerable<IMessageService> services, ITagService tagService)
         {
             _services = services;
-            _tagDetailsService = tagDetailsService;
             _tagService = tagService;
         }
 
@@ -28,18 +26,49 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             }
 
             var tasks = new List<Task>();
+            var messageTemplate = notificationRequest.Body;
             for (int i= 0; i < recipients.Length;i++)
             {
-                notificationRequest.Body = await _tagService.ResolveTags(notificationRequest.Body, recipients[i]);
+                var recipient = recipients[i];
+                recipient.Invoice = await _tagService.ResolveTags(GetTemplateContent("Invoice.html"), recipient);
+                recipient.Receipt = await _tagService.ResolveTags(GetTemplateContent("Receipt.html"), recipient);
 
-                tasks.Add(instance.sendMessage(notificationRequest, recipients[i]));
+
+                notificationRequest.Body = await _tagService.ResolveTags(messageTemplate, recipient);
+
+
+                tasks.Add(instance.sendMessage(notificationRequest, recipient));
             }
 
             await Task.WhenAll(tasks);
             return true;
 
         }
-        
+
+        private string GetTemplateContent(string templateFileName)
+        {
+            string currentDirectory = Directory.GetCurrentDirectory();
+            string templatesFolderPath = Path.Combine(currentDirectory, "Templates");
+
+            if (Directory.Exists(templatesFolderPath))
+            {
+                string templatePath = Path.Combine(templatesFolderPath, templateFileName);
+                if (File.Exists(templatePath))
+                {
+                    return File.ReadAllText(templatePath);
+                }
+                else
+                {
+                    Console.WriteLine($"{templateFileName} template does not exist.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Templates folder does not exist.");
+            }
+
+            return string.Empty;
+        }
     }
 
 }

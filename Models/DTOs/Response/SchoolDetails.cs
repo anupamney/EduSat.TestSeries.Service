@@ -16,6 +16,8 @@
         public string AcademicYear { get; set; }
         public string District { get; set; }
         public string ClassName { get; set; }
+        public string Invoice { get; set; }
+        public string Receipt { get; set; }
 
     }
 }

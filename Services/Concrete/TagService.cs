@@ -1,17 +1,18 @@
 ﻿using EduSat.TestSeries.Service.Models.DTOs.Response;
 using EduSat.TestSeries.Service.Provider;
 using EduSat.TestSeries.Service.Services.Interfaces;
+using Newtonsoft.Json.Linq;
+using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace EduSat.TestSeries.Service.Services.Concrete
 {
     public class TagService : ITagService
     {
-        private readonly ITagDetailsService _tagDetailsService;
         private readonly ISchoolsProvider _schoolProvider;
-        public TagService(ITagDetailsService tagDetailsService,ISchoolsProvider schoolsProvider)
+        public TagService(ISchoolsProvider schoolsProvider)
         {
-            _tagDetailsService = tagDetailsService;
             _schoolProvider = schoolsProvider;
         }
         public async Task<string> ResolveTags(string body, SchoolDetails recipient)
@@ -48,9 +49,9 @@ namespace EduSat.TestSeries.Service.Services.Concrete
                 { "LastName", recipient.TeacherLastName},
                 {"RemainingAmount", (recipient.TotalPayment-recipient.TotalPaymentReceived).ToString()},
                 {"TotalAmount", recipient.TotalPayment.ToString() },
-                {"ReceiptLink", await _tagDetailsService.GetReceiptLinkAsync(recipient) },
-                {"InvoiceLink", await _tagDetailsService.GetInvoiceLinkAsync(recipient) },
-                {"serialNo", recipient.Id.ToString()+"_"+ Guid.NewGuid() },
+                {"ReceiptLink", UploadFile(recipient.Receipt)},
+                {"InvoiceLink", UploadFile(recipient.Invoice)},
+                {"serialNo", recipient.Id.ToString()+"_"+ Guid.NewGuid().ToString().Substring(0,20) },
                 {"date",  date.Day.ToString()},
                 {"month", date.Month.ToString()},
                 {"year", date.Year.ToString() },
@@ -59,7 +60,7 @@ namespace EduSat.TestSeries.Service.Services.Concrete
                 {"counter", "1" },
                 {"classname", recipient.ClassName},
                 {"numberOfStudents", recipient.TotalStudents.ToString()},
-                {"rate", (recipient.TotalPayment/recipient.TotalStudents).ToString()},
+                {"rate", (recipient.TotalPayment/recipient.TotalStudents).ToString("F2")},
                 {"amountPaid", recipient.TotalPaymentReceived.ToString()},
             };
 
@@ -88,6 +89,39 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             }
 
             return input;
+        }
+        private string UploadFile(string content)
+        {
+            if(content == null)
+                return String.Empty;
+            string filePath = $"./receipt{Guid.NewGuid()}.html";
+
+            try
+            {
+                File.WriteAllText(filePath, content);
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that might occur
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    var resStr = client.UploadFile("https://file.io", filePath);
+                    var jObjResult = JObject.Parse(Encoding.UTF8.GetString(resStr));
+                    var linkToFile = jObjResult["link"];
+                    File.Delete(filePath);
+                    return linkToFile.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return String.Empty;
         }
     }
 }
