@@ -32,9 +32,6 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             {
                 notificationRequest.Body = await _tagService.ResolveTags(notificationRequest.Body, recipients[i]);
 
-                string invoice = GetTemplateContent();
-                invoice = _tagService.ResolveTags(notificationRequest.Invoice, recipients[i]);
-                
                 tasks.Add(instance.sendMessage(notificationRequest, recipients[i]));
             }
 

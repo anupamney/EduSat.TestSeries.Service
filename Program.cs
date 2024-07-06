@@ -80,7 +80,8 @@ builder.Services.AddScoped<IJwtService, JwtService>()
     .AddScoped<IMessageService, EmailService>()
     .AddScoped<IMessageService, WhatsappService>()
     .AddScoped<ITagDetailsService, TagDetailsService>()
-    .AddScoped<ITagDetailsProvider, TagDetailsProvider>();
+    .AddScoped<ITagDetailsProvider, TagDetailsProvider>()
+    .AddScoped<ITagService, TagService>();
 
 // Add services to the container.
 
