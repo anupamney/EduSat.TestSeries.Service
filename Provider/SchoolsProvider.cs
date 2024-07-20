@@ -96,7 +96,8 @@ namespace EduSat.TestSeries.Service.Provider
                         FirstName = reader.GetString(reader.GetOrdinal("First_Name")),
                         LastName = reader.GetString(reader.GetOrdinal("Last_Name")),
                         Email = reader.GetString(reader.GetOrdinal("Email_ID")),
-                        Mobile = reader.GetString(reader.GetOrdinal("Contact"))
+                        Mobile = reader.GetString(reader.GetOrdinal("Contact")),
+                        IsPrincipal = reader.GetInt32(reader.GetOrdinal("IS_PRINCIPAL"))
                     };
                     teachers.Add(teacher);
                 }
@@ -113,12 +114,13 @@ namespace EduSat.TestSeries.Service.Provider
             await connection.OpenAsync(); // Open the connection asynchronously
 
             var command = connection.CreateCommand();
-            command.CommandText = @"Insert into teachers (First_Name, Last_Name, Contact, Email_ID)
-                                    VALUES (@FirstName, @LastName, @Mobile, @Email)";
+            command.CommandText = @"Insert into teachers (First_Name, Last_Name, Contact, Email_ID, IS_PRINCIPAL)
+                                    VALUES (@FirstName, @LastName, @Mobile, @Email, @IsPrincipal)";
             command.Parameters.AddWithValue("@FirstName", teacher.FirstName);
             command.Parameters.AddWithValue("@LastName", teacher.LastName);
             command.Parameters.AddWithValue("@Mobile", teacher.Mobile);
             command.Parameters.AddWithValue("@Email", teacher.Email);
+            command.Parameters.AddWithValue("@IsPrincipal", teacher.IsPrincipal);
 
             int rowsAffected = await command.ExecuteNonQueryAsync();
 

@@ -28,7 +28,7 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             {
                 // Send the message
                 var message = MessageResource.Create(
-                    body: "Here is an image for you!",
+                    body: messageDetails.Body,
                     from: _whatsappConfig.TwilioPhoneNumber,
                     to: new PhoneNumber($"whatsapp:+91{recipient.TeacherContact}")
                 );
