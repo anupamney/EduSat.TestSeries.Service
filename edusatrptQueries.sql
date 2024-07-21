@@ -2,9 +2,10 @@
 
 -- Use the ▷ button in the top right corner to run the entire file.
 
-SELECT 
-sd.ID,
+SELECT
+    sd.ID,
     sch.name,
+    tea.contact,
     sch.school_id,
     tea.first_name,
     tea.last_name,
@@ -12,15 +13,18 @@ sd.ID,
     sd.total_students,
     pd.paid,
     pd.TOTAL_PAYMENT,
-    pd.payment_status
-FROM 
-    scholarships_details sd 
-LEFT JOIN 
+    pd.payment_status,
+    sd.ACADEMIC_YEAR,
+    sch.DISTRICT,
+    cl.NAME as class_name,
+    tea.IS_PRINCIPAL
+FROM
+    scholarships_details sd
+LEFT JOIN
     schools sch ON sch.school_id = sd.school_id
-LEFT JOIN 
+LEFT JOIN
     teachers tea ON sd.teacher_id = tea.id
-LEFT JOIN 
+LEFT JOIN
     class cl ON cl.id = sd.class_id
-LEFT JOIN 
+LEFT JOIN
     payment_details pd ON pd.scholarship_id = sd.id;
-

@@ -18,6 +18,7 @@
         public string ClassName { get; set; }
         public string Invoice { get; set; }
         public string Receipt { get; set; }
+        public bool IsPrincipal { get; set; }
 
     }
 }
