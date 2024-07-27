@@ -7,6 +7,7 @@
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string City { get; set; }
+        public string Taluka { get; set; }
         public string District { get; set; }
         public string State { get; set; }
         public string Pin { get; set; }

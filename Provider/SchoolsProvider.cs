@@ -36,7 +36,8 @@ namespace EduSat.TestSeries.Service.Provider
                         State = reader.GetString(reader.GetOrdinal("State")),
                         Pin = reader.GetString(reader.GetOrdinal("Pin")),
                         Email = reader.GetString(reader.GetOrdinal("Email")),
-                        StaffId = reader.GetString(reader.GetOrdinal("Staff_Id"))                        
+                        StaffId = reader.GetString(reader.GetOrdinal("Staff_Id")),
+                        Taluka = reader.IsDBNull(reader.GetOrdinal("Taluka"))?"":reader.GetString(reader.GetOrdinal("Taluka"))
                     };
                     schools.Add(school);
                 }
@@ -54,8 +55,8 @@ namespace EduSat.TestSeries.Service.Provider
 
             var command = connection.CreateCommand();
             command.CommandText = @"
-        INSERT INTO schools (Name, Address_Line_1, Address_Line_2, Village_City, District, State, Pin, Email, Staff_Id)
-        VALUES (@Name, @AddressLine1, @AddressLine2, @City, @District, @State, @Pin, @Email, @StaffId)";
+        INSERT INTO schools (Name, Address_Line_1, Address_Line_2, Village_City, District, State, Pin, Email, Staff_Id, Taluka)
+        VALUES (@Name, @AddressLine1, @AddressLine2, @City, @District, @State, @Pin, @Email, @StaffId, @Taluka)";
 
             // Add parameters to the command to prevent SQL injection
             command.Parameters.AddWithValue("@Name", school.Name);
@@ -67,6 +68,7 @@ namespace EduSat.TestSeries.Service.Provider
             command.Parameters.AddWithValue("@Pin", school.Pin);
             command.Parameters.AddWithValue("@Email", school.Email);
             command.Parameters.AddWithValue("@StaffId", school.StaffId);
+            command.Parameters.AddWithValue("@Taluka", school.Taluka);
 
             // Execute the command asynchronously
             int rowsAffected = await command.ExecuteNonQueryAsync();
