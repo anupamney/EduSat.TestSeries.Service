@@ -19,6 +19,8 @@
         public string Invoice { get; set; }
         public string Receipt { get; set; }
         public bool IsPrincipal { get; set; }
+        public int Discount_Percent { get; set; }
+        public decimal Discounted_Price { get; set; }
 
     }
 }

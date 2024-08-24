@@ -241,13 +241,15 @@ namespace EduSat.TestSeries.Service.Provider
             await connection.OpenAsync(); // Open the connection asynchronously
 
             var command = connection.CreateCommand();
-            command.CommandText = @"Insert into payment_details (Scholarship_Id, Total_payment, Paid,Payment_Status)
-                                    VALUES (@Scholarship_Id,@Total_payment,@Paid,@Payment_Status)";
+            command.CommandText = @"Insert into payment_details (Scholarship_Id, Total_payment, Paid,Payment_Status, Discount_Percent,Discounted_Price)
+                                    VALUES (@Scholarship_Id,@Total_payment,@Paid,@Payment_Status,@Discount_Percent, @Discounted_Price)";
 
             command.Parameters.AddWithValue("@Scholarship_Id", payment.ScholarshipId);
             command.Parameters.AddWithValue("@Total_payment", payment.TotalAmount);
             command.Parameters.AddWithValue("@Paid", payment.AmountPaid);
             command.Parameters.AddWithValue("@Payment_Status", payment.PaymentStatus);
+            command.Parameters.AddWithValue("@Discount_Percent", payment.DiscountPercent);
+            command.Parameters.AddWithValue("@Discounted_Price", payment.DiscountedPrice);
             
             int rowsAffected = await command.ExecuteNonQueryAsync();
 
