@@ -26,3 +26,29 @@ LEFT JOIN
 LEFT JOIN 
     payment_details pd ON pd.scholarship_id = sd.id;
 
+
+SELECT sd.id,
+       sch.NAME,
+       tea.contact,
+       sch.school_id,
+       tea.first_name,
+       tea.last_name,
+       tea.email_id,
+       sd.total_students,
+       pd.paid,
+       pd.total_payment,
+       pd.payment_status,
+       pd.discount_percent,
+       pd.discounted_price,
+       sd.academic_year,
+       sch.district,
+       cl.NAME                                   AS class_name,
+       tea.is_principal from scholarships_details    sd left
+JOIN   schools sch
+ON     sch.school_id = sd.school_id left
+JOIN   teachers tea
+ON     sd.teacher_id = tea.id left
+JOIN   class cl
+ON     cl.id = sd.class_id left
+JOIN   payment_details pd
+ON     pd.scholarship_id = sd.id;
