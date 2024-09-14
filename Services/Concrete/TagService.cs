@@ -49,8 +49,8 @@ namespace EduSat.TestSeries.Service.Services.Concrete
                 { "LastName", recipient.TeacherLastName},
                 {"RemainingAmount", (recipient.TotalPayment-recipient.TotalPaymentReceived).ToString()},
                 {"TotalAmount", recipient.TotalPayment.ToString() },
-                {"ReceiptLink", UploadFile(recipient.Receipt)},
-                {"InvoiceLink", UploadFile(recipient.Invoice)},
+                {"ReceiptLink", UploadFile(recipient.Receipt, "Receipt")},
+                {"InvoiceLink", UploadFile(recipient.Invoice, "Invoice")},
                 {"serialNo", recipient.Id.ToString()+"_"+ Guid.NewGuid().ToString().Substring(0,20) },
                 {"date",  date.Day.ToString()},
                 {"month", date.Month.ToString()},
@@ -62,6 +62,8 @@ namespace EduSat.TestSeries.Service.Services.Concrete
                 {"numberOfStudents", recipient.TotalStudents.ToString()},
                 {"rate", (recipient.TotalPayment/recipient.TotalStudents).ToString("F2")},
                 {"amountPaid", recipient.TotalPaymentReceived.ToString()},
+                {"DiscountPercent", recipient.Discount_Percent.ToString()},
+                {"DiscountedPrice", recipient.Discounted_Price.ToString()}                
             };
 
             Dictionary<string, string> replacements = new Dictionary<string, string>();
@@ -90,11 +92,11 @@ namespace EduSat.TestSeries.Service.Services.Concrete
 
             return input;
         }
-        private string UploadFile(string content)
+        private string UploadFile(string content, string name)
         {
             if(content == null)
                 return String.Empty;
-            string filePath = $"./receipt{Guid.NewGuid()}.html";
+            string filePath = $"./tmp.html";
 
             try
             {
@@ -107,14 +109,11 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             }
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    var resStr = client.UploadFile("https://file.io", filePath);
-                    var jObjResult = JObject.Parse(Encoding.UTF8.GetString(resStr));
-                    var linkToFile = jObjResult["link"];
-                    File.Delete(filePath);
-                    return linkToFile.ToString();
-                }
+                var fileId = GoogleDriveService.UploadFile(filePath, "text/html", name);
+
+                var shareableLink = GoogleDriveService.GetShareableLink(fileId);
+
+                return shareableLink;
             }
             catch (Exception ex)
             {

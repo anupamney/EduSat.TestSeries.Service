@@ -21,5 +21,6 @@ RUN dotnet publish "./EduSat.TestSeries.Service.csproj" -c $BUILD_CONFIGURATION 
 
 FROM base AS final
 WORKDIR /app
+COPY credentials.json /app/credentials.json
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EduSat.TestSeries.Service.dll"]
