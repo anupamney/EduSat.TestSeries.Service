@@ -32,6 +32,11 @@ builder.Services.AddCors(options =>
                       });
 });
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(System.Net.IPAddress.Any, 10000); // Bind to 0.0.0.0:10000
+});
+
 
 builder.Services.AddDbContext<ApiDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("Default"))
