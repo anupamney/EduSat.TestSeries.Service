@@ -37,6 +37,9 @@ builder.WebHost.ConfigureKestrel(options =>
     options.Listen(System.Net.IPAddress.Any, 10000); // Bind to 0.0.0.0:10000
 });
 
+string credentialsPath = "/etc/secrets/credentials.json";
+
+Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
 
 builder.Services.AddDbContext<ApiDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("Default"))
