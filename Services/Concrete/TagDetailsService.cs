@@ -77,6 +77,7 @@ namespace EduSat.TestSeries.Service.Services.Concrete
         private string GetTemplateContent(string templateFileName)
         {
             string currentDirectory = Directory.GetCurrentDirectory();
+            Console.WriteLine(currentDirectory);
             string templatesFolderPath = Path.Combine(currentDirectory, "Templates");
 
             if (Directory.Exists(templatesFolderPath))
