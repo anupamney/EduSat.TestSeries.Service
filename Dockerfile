@@ -13,4 +13,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 COPY app.db .
+
+COPY Templates /app/Templates
 ENTRYPOINT ["dotnet", "EduSat.TestSeries.Service.dll"]
