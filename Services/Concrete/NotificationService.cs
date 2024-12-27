@@ -50,6 +50,18 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             string currentDirectory = Directory.GetCurrentDirectory();
             string templatesFolderPath = Path.Combine(currentDirectory, "Templates");
 
+            Console.WriteLine($"Current Directory: {currentDirectory}");
+
+            // Get all folders in the current directory
+            string[] folders = Directory.GetDirectories(currentDirectory);
+
+            // Print each folder
+            Console.WriteLine("Folders:");
+            foreach (string folder in folders)
+            {
+                Console.WriteLine(folder);
+            }
+
             if (Directory.Exists(templatesFolderPath))
             {
                 string templatePath = Path.Combine(templatesFolderPath, templateFileName);
