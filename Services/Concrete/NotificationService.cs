@@ -30,8 +30,8 @@ namespace EduSat.TestSeries.Service.Services.Concrete
             for (int i= 0; i < recipients.Length;i++)
             {
                 var recipient = recipients[i];
-                recipient.Invoice = await _tagService.ResolveTags(GetTemplateContent("Invoice.html"), recipient);
-                recipient.Receipt = await _tagService.ResolveTags(GetTemplateContent("Receipt.html"), recipient);
+                recipient.Invoice = await _tagService.ResolveTags(GetTemplateContent("invoice.html"), recipient);
+                recipient.Receipt = await _tagService.ResolveTags(GetTemplateContent("receipt.html"), recipient);
 
 
                 notificationRequest.Body = await _tagService.ResolveTags(messageTemplate, recipient);

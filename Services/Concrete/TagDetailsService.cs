@@ -44,14 +44,14 @@ namespace EduSat.TestSeries.Service.Services.Concrete
         //}
         public async Task<string> GetInvoiceLinkAsync(SchoolDetails recipient)
         {
-            string invoiceTemplate = GetTemplateContent("Invoice.html");
+            string invoiceTemplate = GetTemplateContent("invoice.html");
             invoiceTemplate = await _tagService.ResolveTags(invoiceTemplate, recipient);
             return UploadFile(invoiceTemplate);
         }
 
         public async Task<string> GetReceiptLinkAsync(SchoolDetails recipient)
         {
-            string receiptTemplate = GetTemplateContent("Receipt.html");
+            string receiptTemplate = GetTemplateContent("receipt.html");
             receiptTemplate = await _tagService.ResolveTags(receiptTemplate, recipient);
             return UploadFile(receiptTemplate);
         }
